@@ -1,0 +1,174 @@
+/*
+
+	This script file is part of the Sonic 3 A.I.R. Modders Resource. The Modders
+	Resource is a free resource library for any 3 A.I.R. modder, and for any
+	non-commercial purpose. No permission to use needed, no crediting required!
+
+	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+
+*/
+
+// Author Notes
+/*
+
+	This script file contains custom Data Select code that
+	allows for easier creation of custom menus and game modes.
+
+	In this example, you can move the hud sprite around by
+	pressing the directional keys. To exit, press the A button
+	or Enter button.
+
+	It is recommended to make your code in
+	CustomDataselect.MainLogicLoop() to keep everything nice,
+	tidy, and clean.
+
+	When rendering, it is important to keep in mind that
+	position 0,0 is at the top left corner, and adding to it
+	makes it go towards the bottom right corner.
+	
+	So for example, setting the position of a sprite to 100,100
+	will move it from the top left corner by 100 pixels right
+	and 100 pixels down.
+
+	DataSelect.drawCustomPlanes() contains the background sprite
+	rendering.
+
+*/
+
+// Some variables are defined for this script.
+global s16 Sonic.X = 1
+global s16 Sonic.Y = 1
+
+// This bit of code was modified to remove save functions, as we do not need them.
+//# address-hook(0x00c570) end(0x00c860)
+function void DataSelectScreen()
+{
+	FadeOutScreenBlocking()
+
+	Game.onScreenFadedOutBeforeDataSelect()
+
+	Menu.FadeInAfterInit()
+
+	DataSelect.update()
+}
+
+// Modified code to remove data select stuff.
+function void DataSelect.setup()
+{
+	VDP.Config.setActiveDisplay(false)
+	fn0011ca()
+
+	VDP.Config.setActiveDisplay(true)
+	zeroMemory(0xffffac00, 0x400)
+	zeroMemory(0xffffb000, 0x2000)
+
+	VDP.Config.enableHInt(false)
+	VDP.Config.setNameTableBasePlaneA(0xe000)
+	VDP.Config.setNameTableBasePlaneB(0xc000)
+	VDP.Config.setNameTableBasePlaneW(0xe000)
+
+	VDP.Config.setVerticalScrolling(false, 0)	// Horizontal scrolling mode without scroll mask
+	VDP.Config.setRenderingModeConfiguration(false)
+	VDP.Config.setPlayfieldSizeInPixels(1024, 256)
+
+	level.framecounter = 0
+}
+
+// Where most of the magic happens. Dreams do indeed come true!
+function void DataSelect.update()
+{
+	// Main loop
+	while (true)
+	{
+		global.frame_state = 0x1e
+		waitForNextFrame()
+	@EntryPoint:
+
+		// Reset sprites so they go away. Last time I didn't use this it reached the sprite limit.
+		Renderer.resetSprites()
+
+		// Render background.
+		DataSelect.drawCustomPlanes()
+
+		++level.framecounter
+		// ---------------
+		// Recommended to leave the code above alone unless you have a good reason to do so.
+		// ---------------
+
+		// To keep code clean, I'm putting all logic in here.
+		CustomDataselect.MainLogicLoop()
+
+		// This code exits the Data Select. It is recommended to put this somewhere in your scripts.
+		if ((control.pad1.pressed & CONTROL_START) || (control.pad1.pressed & CONTROL_A))
+		{
+			playSound(0xad)
+
+			u32 backupA0 = A0
+			FadeOutScreenBlocking()
+			A0 = backupA0
+
+			// Do not fade out music in this case, Data Select music is meant to kept playing
+			Game.returnToMainMenu()
+			yieldExecution()
+		}
+	}
+}
+
+function void CustomDataselect.MainLogicLoop()
+{
+	// Handle vertical position by checking states.
+	if (control.pad1.state & CONTROL_UP)
+		--Sonic.Y	// Instead of doing Sonic.Y = Sonic.Y - 1, you can do --Sonic.Y and have cleaner code.
+	else if (control.pad1.state & CONTROL_DOWN)
+		++Sonic.Y	// Same thing here, just adds onto it instead.
+
+	// Horizontal direction. Basically the same as the last condition checks.
+	if (control.pad1.state & CONTROL_RIGHT)
+		++Sonic.X
+	else if (control.pad1.state & CONTROL_LEFT)
+		--Sonic.X
+
+	// Render our custom sprite.
+	Renderer.drawCustomSprite("hud_lives_icon_sonic", Sonic.X, Sonic.Y, 0x80, 0, 0xf000)
+}
+
+// Fun fact. "bg_dataselect does not work for some reason, so I used a new sprite defined as "custom_background".
+function void DataSelect.drawCustomPlanes()
+{
+	// The custom background is rendered here.
+	Renderer.drawCustomSprite("custom_background", getScreenExtend() - 40, 0, 0x00, 0, 0x2000)
+}
+
+/*
+	Loads of dummied out functions. Usually its data select stuff,
+	but in order to make this work we need to empty 'em.
+*/
+
+//# address-hook(0x00d1fa) end(0x00d30a)
+function void fn00d1fa()
+{
+}
+//# address-hook(0x00d7ea) end(0x00d84e)
+function void fn00d7ea()
+{
+}
+//# address-hook(0x00c006) end(0x00c028)
+function void fn00c006()
+{
+}
+//# address-hook(0x00c890) end(0x00c95c)
+function void fn00c890()
+{
+}
+//# address-hook(0x00c97a) end(0x00ca12)
+function void fn00c97a()
+{
+}
+//# address-hook(0x00d7c0) end(0x00d7e6)
+function void fn00d7c0()
+{
+}
+//# address-hook(0x00d42c) end(0x00d69a)
+function void fn00d42c()
+{
+}
