@@ -1,0 +1,31 @@
+/*
+
+	This script file is part of the Sonic 3 A.I.R. Modders Resource. The Modders
+	Resource is a free resource library for any 3 A.I.R. modder, and for any
+	non-commercial purpose. No permission to use needed, no crediting required!
+
+	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+
+*/
+
+// Author Notes
+/*
+
+	This script forces Smooth Rotation to always be
+	enabled, regardless of what the user actually
+	has as their setting.
+
+	There's not too much coding behind it, just
+	this small thing.
+
+*/
+
+// Overload the function used to fetch settings.
+function u32 Game.getSetting(u32 settingId)
+{
+	// Always return true if the setting is for Smooth Rotation.
+	if (settingId == SETTING_SMOOTH_ROTATION)
+		return true
+
+	return base.Game.getSetting(settingId)
+}
