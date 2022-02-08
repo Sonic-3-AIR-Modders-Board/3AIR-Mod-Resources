@@ -40,7 +40,7 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 		{
 			u64 key = stringformat("big_hyper_ring_0%d", objA0.animation.sprite)
 			u8 alpha = min(255, u16(objA0.value32) * 10)
-			Renderer.drawCustomSprite(key, px, py, 0x00, 0, renderQueue, 0, alpha)
+			Renderer.drawCustomSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue, 0, alpha)
 			return true
 		}
 	}
