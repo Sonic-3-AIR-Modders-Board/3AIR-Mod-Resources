@@ -1,0 +1,227 @@
+// This is mostly just original spilled ring code, but I made it a completely seperate object for the sake of making this more organized.
+
+
+// value26 is used here for the ring's worth
+// value32 is used here for the countdown (and the fade effect)
+
+//# address-hook(0x002000) end(0x002001)
+function void HyperRing.update()
+{
+	// The countdown for these rings works slightly different from the original.
+	// These all have their own countdown timer. This prevents many issues.
+	if objA0.value32 > 0
+	{
+		objA0.value32 -= 1
+	}
+
+	if objA0.base_state == 0x00
+	{
+		fn01a67a()
+	}
+	else if objA0.base_state == 0x02
+	{
+		HyperRing02.update()
+	}
+	else if objA0.base_state == 0x04
+	{
+		HyperRing04.update()
+	}
+	else if objA0.base_state == 0x06
+	{
+		HyperRing06.update()
+	}
+}
+
+function void HyperRing02.update()
+{
+	objA0.animation.sprite = (objA0.value32 >> 3) % 4
+	
+	// Instead of having a seperate function for inverted gravity (like the original), just set the y-velocity to be negative during the movement function.
+	if (global.inv_gravity)
+	{
+		objA0.velocity.y = -objA0.velocity.y
+		UpdateMovementStraightSimple()
+		objA0.velocity.y = -objA0.velocity.y
+	}
+	else
+	{
+		UpdateMovementStraightSimple()
+	}
+	
+	
+	objA0.velocity.y += 0x18
+	if (objA0.velocity.y >= 0)
+	{
+		D0.u8 = (global.framecounter + D7.u8) & 0x07
+		if (D0.u8 == 0)
+		{
+			if (objA0.render_flags & render_flag.VISIBLE)
+			{
+				fn00f994()
+				if (D1.s16 < 0)
+				{
+					objA0.position.y.u16 += D1.u16
+					objA0.velocity.y = (objA0.velocity.y >> 2) - objA0.velocity.y
+					
+					// These also have a chance to reverse direction when bouncing. This is done to sort of mimic Mania's rings bouncing from walls, and it makes these slightly easier to grab.
+					u8 random = System.rand() % 100
+					if random <= 10
+					{
+						objA0.velocity.x = -objA0.velocity.x
+					}
+				}
+			}
+			if (objA0.value32 == 0)
+			{
+				// Time over for this ring
+				UnloadObject()
+				return
+			}
+		}
+	}
+
+
+	AddAsDynamicObject()
+	objA0.position.x.u16 -= u16[0xffffeebc]
+	DrawObject()
+}
+
+function void HyperRing04.update()
+{
+	objA0.base_state += 2
+	u8[A0 + 0x28] = 0
+	objA0.sprite_priority = 0x80
+	
+	u16 amount = objA0.value26
+	
+	// This code is taken from the ring monitors.
+	ring_counter = min(ring_counter + amount, 999)
+	u16[0xfffffec8] = min(u16[0xfffffec8] + amount, 999)
+	hud.dirty.rings |= 0x01
+
+	if (checkForExtraLifeByRings())
+	{
+		if (A1 == 0xffffb000)
+		{
+			ItemEffect.ApplyExtraLifePlayer1()
+		}
+		else
+		{
+			fn01d890()
+		}
+	}
+	else
+	{
+		playMusic(SFX_RING)
+	}
+	
+	fn01a7d6()
+}
+
+function void HyperRing06.update()
+{
+	Object.animationUpdate(0x01a992)
+	DrawObject()
+}
+
+function void HyperRing08.update()
+{
+	UnloadObject()
+}
+
+//# address-hook(0x01a6b6) end(0x01a734)
+//# translated(0x01a6ae) end(0x01a758)
+function void SpillRings()
+{
+	if hyper_ring_active
+	{
+		u16 ring_value
+		s8 counter
+		if ring_counter <= 8
+		{
+			ring_value = ring_counter
+			counter = 0
+		}
+		else if ring_counter <= 17
+		{
+			ring_value = ring_counter / 2
+			counter = 1
+		}
+		else if ring_counter <= 25
+		{
+			ring_value = ring_counter / 4
+			counter = 3
+		}
+		else
+		{
+			ring_value = ring_counter / 8
+			counter = 7
+		}
+		
+		while (counter >= 0)
+		{
+			u32[A1] = 0x002000
+			u8[A1 + 0x04] = (render_flag.WORLD | render_flag.VISIBLE)
+			u8[A1 + 0x05] += 2
+			u8[A1 + 0x06] = 0xff
+			u8[A1 + 0x07] = 0xff
+			u16[A1 + 0x08] = 0x180
+			u16[A1 + 0x0a] = 0xa6bc
+			u32[A1 + 0x0c] = 0x01a99a
+			objA1.position.x.u16 = objA0.position.x.u16
+			objA1.position.y.u16 = objA0.position.y.u16
+			u8[A1 + 0x1e] = 16
+			u8[A1 + 0x1f] = 16
+			u8[A1 + 0x28] = 0x47
+			
+			objA1.value26 = ring_value
+
+			objA1.value32 = 0x180
+			if (D4.s16 >= 0)
+			{
+				// Entered only for every second ring (the others use x-mirrored directions)
+				u8 angle = D4.u8
+				u8 shift = D4.u16 >> 9
+				D2.s16 = lookupSin(angle) << shift
+				D3.s16 = lookupCos(angle) << shift
+
+				// Go on with next angle (and possibly switch to a lower shift)
+				if (D4.u8 < 0xf0)
+				{
+					D4.u8 += 0x10
+				}
+				else
+				{
+					D4.u16 -= 0x170
+					if (D4.s16 < 0)
+					{
+						D4.s16 = 0x288
+					}
+				}
+			}
+			objA1.velocity.x = D2.u16
+			objA1.velocity.y = D3.u16
+			D2.s16 = -D2.s16
+			D4.s16 = -D4.s16
+
+			// Next ring
+			counter -= 1
+			if (counter < 0)
+				break
+			if (!allocDynamicObjectAfterA0())
+				break
+		}
+
+		playSound(SFX_SPILLRINGS)
+		ring_counter = 0
+		hud.dirty.rings = 0x80
+		extra_lives_granted = 0
+		HyperRing.update()
+		
+		hyper_ring_active = false
+	}
+	else
+	{
+		base.SpillRings()
+	}
+}
