@@ -1,0 +1,83 @@
+/*
+
+	This script file is part of the Sonic 3 A.I.R. Modders Resource. The Modders
+	Resource is a free resource library for any 3 A.I.R. modder, and for any
+	non-commercial purpose. No permission to use needed, no crediting required!
+
+	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+
+*/
+
+// Author Notes
+/*
+
+	This adds custom monitors
+	0x0c - Roulette
+	0x0d - Fast roulette
+	0x0e - Random ring amount (1, 5, 10, 15, 30, 50)
+	0x0f - Hyper / Combine rings from Sonic Mania
+
+*/
+
+global bool hyper_ring_active = false
+
+include monitor
+include hyperring
+
+// This function gets called every time a new level loads / restarts / whatever.
+// Of course, we need to reset the hyper ring status here.
+function void initializeMainGame()
+{
+	hyper_ring_active = false
+	base.initializeMainGame()
+}
+
+function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{
+	// Initiate a renderhook for our Hyper rings.
+	if (objA0.update_address == 0x002000)
+	{
+		if (objA0.base_state == 0x02)
+		{
+			u64 key = stringformat("big_hyper_ring_0%d", objA0.animation.sprite)
+			u8 alpha = min(255, u16(objA0.value32) * 10)
+
+			Renderer.drawCustomSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue, 0, alpha)
+			return true
+		}
+	}
+	return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
+}
+
+// Shout out to Lave Slime for their HUD tutorial!
+//# address-hook(0x00db44) end(0x00dbb2)
+function void RenderHUD()
+{
+	if (DEBUG_DISABLE_HUD)
+		return
+
+	s16 baseX = global.level_started
+	if (baseX < 0)
+	{
+		baseX += 8
+		global.level_started = baseX
+	}
+	baseX += 0x0f
+
+	bool isBonusStage = (global.zone >= 0x13 && global.zone <= 0x15)
+	if (!debug_mode.state)
+	{
+		// Bonus stage check; don't want anything rendering in there now.
+		if (!isBonusStage)
+		{
+			// Is the Hyper Ring active?
+			if (hyper_ring_active)
+			{
+				HUD.drawSprite("monitor_icon_hyper_ring", baseX + 0x6b, 0x2e , 0xe000)
+			}
+		}
+	}
+
+	// Call the base script, otherwise nothing else will appear.
+	base.RenderHUD()
+}
