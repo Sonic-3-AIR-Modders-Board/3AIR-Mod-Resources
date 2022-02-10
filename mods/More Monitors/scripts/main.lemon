@@ -19,10 +19,13 @@
 
 */
 
+// This global lets you have custom sprites for the hyper rings. If set to false, the rings will simply use the normal ring sprite scaled up.
+global bool custom_rings = false
 global bool hyper_ring_active = false
 
 include monitor
 include hyperring
+include ring_object_managers
 
 // This function gets called every time a new level loads / restarts / whatever.
 // Of course, we need to reset the hyper ring status here.
@@ -35,14 +38,26 @@ function void initializeMainGame()
 function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 {
 	// Initiate a renderhook for our Hyper rings.
-	if (objA0.update_address == 0x002000)
+	if (objA0.update_address == 0x200000)
 	{
 		if (objA0.base_state == 0x02)
 		{
-			u64 key = stringformat("big_hyper_ring_0%d", objA0.animation.sprite)
-			u8 alpha = min(255, u16(objA0.value32) * 10)
-
-			Renderer.drawCustomSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue, 0, alpha)
+			u8 alpha = min(255, u16(objA0.value32) * 10)	// value32 is the ring's countdown timer
+			// Tint parameter: first byte is the opacity, we just use the alpha here. The rest is the ring's colour, just use the default values there.
+			u32 tint = (alpha << 0x18) + 0xffffff
+		
+			if (custom_rings)
+			{
+				u8 anim = objA0.animation.sprite % 4
+				u64 key = stringformat("big_hyper_ring_0%d", objA0.animation.sprite)
+				Renderer.drawCustomSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue, 0, alpha)
+			}
+			else
+			{
+				u64 key = stringformat("ring_0%d", objA0.animation.sprite)
+				u32 scale =  0x0020000
+				Renderer.drawCustomSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue, 0, tint, scale)
+			}
 			return true
 		}
 	}
@@ -80,4 +95,32 @@ function void RenderHUD()
 
 	// Call the base script, otherwise nothing else will appear.
 	base.RenderHUD()
+}
+
+//# address-hook(0x01365c) end(0x0136b8)
+function void Character.BaseUpdate.Tails()
+{
+	A4 = 0xfffffec0		// Address of Tails' speed caps
+	A5 = 0xffffee2e		// Address of camera.yoffset.tails
+	A6 = 0xffffcc9e		// Base address of dust cloud object for Tails
+
+	if (debug_mode.state == 0 || global.characters != CHARS_TAILS_ALONE)	// Maybe a check if it's second player Tails?
+	{
+		// Targets:
+		//  - 0x0136ca	-> char.base_state = 0x00
+		//  - 0x0137c4	-> char.base_state = 0x02
+		//  - 0x01569c	-> char.base_state = 0x04
+		//  - 0x01578e	-> char.base_state = 0x06
+		//  - 0x0157e0	-> char.base_state = 0x08
+		//  - 0x015810	-> char.base_state = 0x0c
+		call tableLookupAddress(0x0136bc, char.base_state)
+	}
+	else
+	{
+		if (updateDebugModeRegular())
+		{
+			UpdateTailsSpritePatterns()
+			DrawObject()
+		}
+	}
 }
