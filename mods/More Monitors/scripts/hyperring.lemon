@@ -49,26 +49,39 @@ function void HyperRing02.update()
 	objA0.velocity.y += 0x18
 	if (objA0.velocity.y >= 0)
 	{
-		D0.u8 = (global.framecounter + D7.u8) & 0x07
-		if (D0.u8 == 0)
+		fn00f994()
+		if (D1.s16 < 0)
 		{
-			fn00f994()
-			if (D1.s16 < 0)
-			{
-				objA0.position.y.u16 += D1.u16
-				objA0.velocity.y = (objA0.velocity.y >> 2) - objA0.velocity.y
-				
-				// These also have a chance to reverse direction when bouncing. This is done to sort of mimic Mania's rings bouncing from walls, and it makes these slightly easier to grab.
-				u8 random = System.rand() % 100
-				if (random <= 10)
-					objA0.velocity.x = -objA0.velocity.x
-			}
-			if (objA0.value32 == 0)
-			{
-				// Time over for this ring
-				UnloadObject()
-				return
-			}
+			objA0.position.y.u16 += D1.u16
+			objA0.velocity.y = (objA0.velocity.y >> 2) - objA0.velocity.y
+			
+			// These also have a chance to reverse direction when bouncing. Originally, this was done to sort of mimic Mania's rings bouncing from walls until I implemented a proper wall check, and it makes these slightly easier to grab.
+			u8 random = System.rand() % 100
+			if (random <= 10)
+				objA0.velocity.x = -objA0.velocity.x
+		}
+		// Wall collision functions, D3 is the object's width here.
+		if (objA0.velocity.x >= 0)
+		{
+			D3 = 16
+			fn00fac4()
+		}
+		else
+		{
+			D3 = -16
+			fn00fe3c()
+		}
+		// Did we collide?
+		if (D1.s16 < 0)
+		{
+			objA0.velocity.x = -objA0.velocity.x	// Then, reverse the x-speed
+		}
+		
+		if (objA0.value32 == 0)
+		{
+			// Time over for this ring
+			UnloadObject()
+			return
 		}
 	}
 

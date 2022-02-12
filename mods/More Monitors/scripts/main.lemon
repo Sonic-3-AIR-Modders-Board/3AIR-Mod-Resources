@@ -22,16 +22,18 @@
 // This global lets you have custom sprites for the hyper rings. If set to false, the rings will simply use the normal ring sprite scaled up.
 global bool custom_rings = false
 global bool hyper_ring_active = false
+global bool hyper_ring_active_backup = false
 
 include monitor
 include hyperring
-include ring_object_managers
+include hyperring_backups
 
 // This function gets called every time a new level loads / restarts / whatever.
 // Of course, we need to reset the hyper ring status here.
 function void initializeMainGame()
 {
-	hyper_ring_active = false
+	hyper_ring_active = hyper_ring_active_backup
+	hyper_ring_active_backup = false
 	base.initializeMainGame()
 }
 
@@ -95,32 +97,4 @@ function void RenderHUD()
 
 	// Call the base script, otherwise nothing else will appear.
 	base.RenderHUD()
-}
-
-//# address-hook(0x01365c) end(0x0136b8)
-function void Character.BaseUpdate.Tails()
-{
-	A4 = 0xfffffec0		// Address of Tails' speed caps
-	A5 = 0xffffee2e		// Address of camera.yoffset.tails
-	A6 = 0xffffcc9e		// Base address of dust cloud object for Tails
-
-	if (debug_mode.state == 0 || global.characters != CHARS_TAILS_ALONE)	// Maybe a check if it's second player Tails?
-	{
-		// Targets:
-		//  - 0x0136ca	-> char.base_state = 0x00
-		//  - 0x0137c4	-> char.base_state = 0x02
-		//  - 0x01569c	-> char.base_state = 0x04
-		//  - 0x01578e	-> char.base_state = 0x06
-		//  - 0x0157e0	-> char.base_state = 0x08
-		//  - 0x015810	-> char.base_state = 0x0c
-		call tableLookupAddress(0x0136bc, char.base_state)
-	}
-	else
-	{
-		if (updateDebugModeRegular())
-		{
-			UpdateTailsSpritePatterns()
-			DrawObject()
-		}
-	}
 }
