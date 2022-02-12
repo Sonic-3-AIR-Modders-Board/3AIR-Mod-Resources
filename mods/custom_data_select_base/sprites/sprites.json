@@ -1,4 +1,0 @@
-{
-	// Custom Background (default one does not work for some reason).
-	"custom_background":      { "File": "background.png" }
-}
