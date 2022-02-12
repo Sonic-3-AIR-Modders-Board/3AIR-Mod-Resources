@@ -1,0 +1,197 @@
+/*
+
+	This script file is part of the Sonic 3 A.I.R. Modders Resource. The Modders
+	Resource is a free resource library for any 3 A.I.R. modder, and for any
+	non-commercial purpose. No permission to use needed, no crediting required!
+
+	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+
+*/
+
+// Author Notes
+/*
+
+	This script file contains custom menu code that allows for
+	easier creation of custom menus and game modes.
+	
+	The way this works is by setting up new Call Frames. Call
+	Frames are basically the same as calling a function.
+	Call frames are used when you press Start Game in the main menu
+	and get transported into the Data Select.
+	
+	I left some other comments around explaining it more,
+	but thats the basic explanation of it.
+
+	In this example, you can move the hud sprite around by
+	pressing the directional buttons. To exit to the DataSelect
+	menu press button A or Start. To exit to the A.I.R. menu
+	press button C.
+
+	It is recommended to make your code in
+	CustomMenu.MainLogicLoop() to keep everything nice,
+	tidy, and clean. Though it is not the standard and you are
+	free to as you wish.
+
+	When rendering, it is important to keep in mind that
+	position 0,0 is at the top left corner, and adding to it
+	makes it go towards the bottom right corner.
+	
+	So for example, setting the position of a sprite to 100,100
+	will move it from the top left corner by 100 pixels right
+	and 100 pixels down.
+
+	DataSelect.drawCustomPlanes() contains the background sprite
+	rendering.
+
+*/
+
+// Keeps track of menus. Set to 0 when it boots up the Data Select.
+global u8 menuScreen = 0
+
+// Some variables are defined for this script.
+global s16 Sonic.X = 1
+global s16 Sonic.Y = 1
+
+// Load up our own custom menu instead of the Data Select by overwriting this script with our own code.
+function void EntryFunctions.dataSelect()
+{
+	yieldExecution()
+
+	EntryFunctions.sharedInit()
+	System.setupCallFrame("GameModeControlLoop", "@EntryPoint")
+	
+	// Loadup the custom menu. Usually "loadupDataSelect".
+	System.setupCallFrame("loadupCustomMenu")
+}
+
+// Setup custom menu.
+function void loadupCustomMenu()
+{	
+	// Setup variable to be this value, just in case.
+	menuScreen = 1
+
+	// Go to our custom menu.
+	global.game_mode = 0x4c
+	CustomMenu.setup()
+	Menu.FadeInAfterInit()
+
+	CustomMenu.update()
+}
+
+// Modified data select code to remove some stuff but still keep the good ol' rendering.
+function void CustomMenu.setup()
+{
+	VDP.Config.setActiveDisplay(false)
+	fn0011ca()
+
+	VDP.Config.setActiveDisplay(true)
+	zeroMemory(0xffffac00, 0x400)
+	zeroMemory(0xffffb000, 0x2000)
+
+	VDP.Config.enableHInt(false)
+	VDP.Config.setNameTableBasePlaneA(0xe000)
+	VDP.Config.setNameTableBasePlaneB(0xc000)
+	VDP.Config.setNameTableBasePlaneW(0xe000)
+
+	VDP.Config.setVerticalScrolling(false, 0)	// Horizontal scrolling mode without scroll mask
+	VDP.Config.setRenderingModeConfiguration(false)
+	VDP.Config.setPlayfieldSizeInPixels(1024, 256)
+
+	level.framecounter = 0
+}
+
+// Where most of the magic happens. Dreams do indeed come true!
+function void CustomMenu.update()
+{
+	// Main loop
+	while (true)
+	{
+		// Some stuff I don't know about, do not delete.
+		global.frame_state = 0x1e
+		waitForNextFrame()
+	@EntryPoint:
+
+		// Reset sprites so they go away. Last time I didn't use this it reached the sprite limit.
+		Renderer.resetSprites()
+
+		// Render background.
+		DataSelect.drawCustomPlanes()
+
+		++level.framecounter
+		// ---------------
+		// Recommended to leave the code above alone unless you have a good reason to do so.
+		// ---------------
+
+		// To keep code clean, I'm putting all logic in here. Do however you want though!
+		CustomMenu.MainLogicLoop()
+
+		// These two if condtions allow exiting to differnt locations.
+		// It is recommended to put one of these somewhere in your scripts so players do not get soft-locked.
+
+		// This code exits to the Data Select using CallFrames.
+		if ((control.pad1.pressed & CONTROL_START) || (control.pad1.pressed & CONTROL_A))
+		{
+			playSound(0xad)
+
+			// Fade out screen.
+			u32 backupA0 = A0
+			FadeOutScreenBlocking()
+			A0 = backupA0
+
+			// You can setup Call Frames at any point. This is to go into the Data Select.
+			System.setupCallFrame("GameModeControlLoop", "@EntryPoint")
+			System.setupCallFrame("loadupDataSelect")
+
+			menuScreen = 0
+		}
+		// This code exits to the Sonic 3 A.I.R. main menu.
+		else if (control.pad1.pressed & CONTROL_C)
+		{
+			playSound(0xad)
+
+			u32 backupA0 = A0
+			FadeOutScreenBlocking()
+			A0 = backupA0
+
+			// Do not fade out music in this case, Data Select music is meant to kept playing
+			Game.returnToMainMenu()
+			yieldExecution()
+		}
+	}
+}
+
+function void CustomMenu.MainLogicLoop()
+{
+	// Handle vertical position by checking states.
+	if (control.pad1.state & CONTROL_UP)
+		--Sonic.Y	// Instead of doing Sonic.Y = Sonic.Y - 1, you can do --Sonic.Y and have cleaner code.
+	else if (control.pad1.state & CONTROL_DOWN)
+		++Sonic.Y	// Same thing here, just adds onto it instead.
+
+	// Horizontal direction. Basically the same as the last condition checks.
+	if (control.pad1.state & CONTROL_RIGHT)
+		++Sonic.X
+	else if (control.pad1.state & CONTROL_LEFT)
+		--Sonic.X
+
+	// Render our custom sprite.
+	Renderer.drawCustomSprite("hud_lives_icon_sonic", Sonic.X, Sonic.Y, 0x80, 0, 0xf000)
+}
+
+// Fun fact. "bg_dataselect does not work for some reason, so I used a new sprite defined as "custom_background".
+function void DataSelect.drawCustomPlanes()
+{
+	// Check for the screen the menu is on.
+	if (menuScreen == 1)
+	{
+		// If you are wondering why I didn't do CustomMenu.drawCustomPlanes() it didn't load quite as fast as I would like it to.
+		
+		// Render the custom background.
+		Renderer.drawCustomSprite("custom_background", getScreenExtend() - 40, 0, 0x00, 0, 0x2000)
+	}
+	else
+	{
+		// Call the base Data Select background script. Useful for mod compatibility with custom Data Select menus.
+		base.DataSelect.drawCustomPlanes()
+	}
+}
