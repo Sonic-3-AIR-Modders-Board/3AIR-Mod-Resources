@@ -7,7 +7,7 @@
 //# address-hook(0x200000) end(0x200001)
 function void HyperRing.update()
 {
-	if objA0.box_size.x != 0xff
+	if (objA0.box_size.x != 0xff)
 	{
 		return
 	}
