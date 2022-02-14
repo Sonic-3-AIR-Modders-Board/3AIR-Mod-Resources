@@ -87,6 +87,8 @@ function bool Standalone.drawCharacterSprite(u8 character, u8 variant, s16 px, s
 						angle = (animationSprite - 0x21) / 4 * 0xe0
 						if (char.flags & char.flag.FACING_LEFT)
 							angle = -angle
+						if (global.inv_gravity)
+							angle = -angle
 						animationSprite = 0x21 + (animationSprite - 0x21) % 4
 					}
 				}
