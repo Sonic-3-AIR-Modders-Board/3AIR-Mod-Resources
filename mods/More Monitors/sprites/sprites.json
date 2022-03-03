@@ -1,8 +1,16 @@
 {
 	"monitor_icon_random_ring":  { "File": "random_ring.bmp", "Rect": "0,0,16,16", "Center": "8,8" },
 	"monitor_icon_hyper_ring":  { "File": "hyper_ring.bmp", "Rect": "0,0,16,16", "Center": "8,8" },
+	
+	"hyper_ring_icon":  { "File": "hyper_ring_icon.png", "Rect": "0,0,16,16", "Center": "8,8" },
+	
+	// Scaled ring sprites by MiaPaisano
 	"big_hyper_ring_00":  { "File": "big_hyper_ring.bmp", "Rect": "0,0,32,32", "Center": "16,16" },
 	"big_hyper_ring_01":  { "File": "big_hyper_ring.bmp", "Rect": "32,0,32,32", "Center": "16,16" },
 	"big_hyper_ring_02":  { "File": "big_hyper_ring.bmp", "Rect": "64,0,32,32", "Center": "16,16" },
 	"big_hyper_ring_03":  { "File": "big_hyper_ring.bmp", "Rect": "96,0,32,32", "Center": "16,16" },
+	"big_hyper_ring_04":  { "File": "big_hyper_ring.bmp", "Rect": "128,0,32,32", "Center": "16,16" },
+	"big_hyper_ring_05":  { "File": "big_hyper_ring.bmp", "Rect": "160,0,32,32", "Center": "16,16" },
+	"big_hyper_ring_06":  { "File": "big_hyper_ring.bmp", "Rect": "192,0,32,32", "Center": "16,16" },
+	"big_hyper_ring_07":  { "File": "big_hyper_ring.bmp", "Rect": "224,0,32,32", "Center": "16,16" },
 }
