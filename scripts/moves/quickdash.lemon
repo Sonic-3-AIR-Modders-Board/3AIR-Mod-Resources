@@ -40,12 +40,9 @@ function void UpdateGamePause()
 	base.UpdateGamePause()
 }
 
-// Sonic's dash.
-
-//# address-hook(0x010a94) end(0x010ae8)
-function void Character.BaseUpdate.Sonic()
+// Dash function.
+function void Character.dashPerform()
 {
-	base.Character.BaseUpdate.Sonic()
 	if (A0 == 0xffffb000) // This is to check if this is the main player and not 2P.
 	{
 		if (Input.buttonPressed(BUTTON_B) && dashTimer == 0) // If you press X on an Xbox or Square on a PS,
@@ -66,6 +63,15 @@ function void Character.BaseUpdate.Sonic()
 		if (dashTimer > 0)
 			dashTimer -= 1 // If timer is not 0, decrease by 1.
 	}
+}
+
+// Sonic's dash.
+
+//# address-hook(0x010a94) end(0x010ae8)
+function void Character.BaseUpdate.Sonic()
+{
+	base.Character.BaseUpdate.Sonic()
+	Character.dashPerform()
 }
 
 // Tails' dash.
@@ -74,26 +80,7 @@ function void Character.BaseUpdate.Sonic()
 function void Character.BaseUpdate.Tails()
 {
 	base.Character.BaseUpdate.Tails()
-	if (A0 == 0xffffb000) // This is to check if this is the main player and not 2P.
-	{
-		if (Input.buttonPressed(BUTTON_B) && dashTimer == 0) // If you press X on an Xbox or Square on a PS,
-		{																  // and the timer is 0, then dash.
-			if (lastHeldDPad.dir == 1 && (char.render_flags & render_flag.FLIP_X))
-				char.velocity.x -= dashSpeed // For when facing Left and last pressed direction was Left.
-			else if (lastHeldDPad.dir == 0 && (char.render_flags & render_flag.FLIP_X))
-				char.velocity.x += char.velocity.x - char.velocity.x - dashSpeed // For when facing Left and last pressed direction was Right.
-			else if (lastHeldDPad.dir == 1 && !(char.render_flags & render_flag.FLIP_X))
-				char.velocity.x -= char.velocity.x - char.velocity.x + dashSpeed // For when facing Right and last pressed direction was Left.
-			else
-				char.velocity.x += dashSpeed  // For when facing Right and last pressed direction was Right.
-			char.velocity.y = 0 // Don't jump.
-			dashTimer = dashCooldown // Set timer to dashCooldown.
-			playSound(SFX_INSTASHIELD) // Play SFX.
-			char.state = char.state.ROLLING // Roll.
-		}
-		if (dashTimer > 0)
-			dashTimer -= 1 // If timer is not 0, decrease by 1.
-	}
+	Character.dashPerform()
 }
 
 // Knuckles' dash.
@@ -102,24 +89,5 @@ function void Character.BaseUpdate.Tails()
 function void Character.BaseUpdate.Knuckles()
 {
 	base.Character.BaseUpdate.Knuckles()
-	if (A0 == 0xffffb000) // This is to check if this is the main player and not 2P.
-	{
-		if (Input.buttonPressed(BUTTON_B) && dashTimer == 0) // If you press X on an Xbox or Square on a PS,
-		{																  // and the timer is 0, then dash.
-			if (lastHeldDPad.dir == 1 && (char.render_flags & render_flag.FLIP_X))
-				char.velocity.x -= dashSpeed // For when facing Left and last pressed direction was Left.
-			else if (lastHeldDPad.dir == 0 && (char.render_flags & render_flag.FLIP_X))
-				char.velocity.x += char.velocity.x - char.velocity.x - dashSpeed // For when facing Left and last pressed direction was Right.
-			else if (lastHeldDPad.dir == 1 && !(char.render_flags & render_flag.FLIP_X))
-				char.velocity.x -= char.velocity.x - char.velocity.x + dashSpeed // For when facing Right and last pressed direction was Left.
-			else
-				char.velocity.x += dashSpeed  // For when facing Right and last pressed direction was Right.
-			char.velocity.y = 0 // Don't jump.
-			dashTimer = dashCooldown // Set timer to dashCooldown.
-			playSound(SFX_INSTASHIELD) // Play SFX.
-			char.state = char.state.ROLLING // Roll.
-		}
-		if (dashTimer > 0)
-			dashTimer -= 1 // If timer is not 0, decrease by 1.
-	}
+	Character.dashPerform()
 }
