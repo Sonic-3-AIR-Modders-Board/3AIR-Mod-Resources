@@ -1,0 +1,6 @@
+{
+	"monitor_icon_random_ring":  { "File": "random_ring.bmp", "Rect": "0,0,16,16", "Center": "8,8" },
+	"monitor_icon_hyper_ring":  { "File": "hyper_ring.bmp", "Rect": "0,0,16,16", "Center": "8,8" },
+	
+	"hyper_ring_icon":  { "File": "hyper_ring_icon.png", "Rect": "0,0,16,16", "Center": "8,8" },
+}

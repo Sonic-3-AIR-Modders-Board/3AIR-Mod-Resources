@@ -1,0 +1,99 @@
+/*
+
+	This script file is part of the Sonic 3 A.I.R. Modders Resource. The Modders
+	Resource is a free resource library for any 3 A.I.R. modder, and for any
+	non-commercial purpose. No permission to use needed, no crediting required!
+
+	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+
+*/
+
+// Author Notes
+/*
+
+	This adds custom monitors
+	0x0c - Roulette
+	0x0d - Fast roulette
+	0x0e - Random ring amount (1, 5, 10, 15, 30, 50)
+	0x0f - Hyper / Combine rings from Sonic Mania
+
+*/
+
+// This global lets you have custom sprites for the hyper rings. If set to false, the rings will simply use the normal ring sprite scaled up.
+global bool custom_rings = false
+global bool hyper_ring_active = false
+global bool hyper_ring_active_backup = false
+
+include monitor
+include hyperring
+include hyperring_backups
+
+// This function gets called every time a new level loads / restarts / whatever.
+// Of course, we need to reset the hyper ring status here.
+function void initializeMainGame()
+{
+	hyper_ring_active = hyper_ring_active_backup
+	hyper_ring_active_backup = false
+	base.initializeMainGame()
+}
+
+function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{
+	// Initiate a renderhook for our Hyper rings.
+	if (objA0.update_address == 0x200000)
+	{
+		if (objA0.base_state == 0x02)
+		{
+			u8 alpha = min(255, u16(objA0.value32) * 10)	// value32 is the ring's countdown timer
+			// Tint parameter: first byte is the opacity, we just use the alpha here. The rest is the ring's colour, just use the default values there.
+			u32 tint = (alpha << 0x18) + 0xffffff
+		
+			if (custom_rings)
+			{
+				u64 key = stringformat("big_hyper_ring_0%d", objA0.animation.sprite)
+				Renderer.drawCustomSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue, 0, alpha)
+			}
+			else
+			{
+				u64 key = stringformat("ring_0%d", objA0.animation.sprite)
+				u32 scale =  0x0020000
+				Renderer.drawCustomSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue, 0, tint, scale)
+			}
+			return true
+		}
+	}
+	return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
+}
+
+// Shout out to Lave Slime for their HUD tutorial!
+//# address-hook(0x00db44) end(0x00dbb2)
+function void RenderHUD()
+{
+	if (DEBUG_DISABLE_HUD)
+		return
+
+	s16 baseX = global.level_started
+	if (baseX < 0)
+	{
+		baseX += 8
+		global.level_started = baseX
+	}
+	baseX += 0x0f
+
+	bool isBonusStage = (global.zone >= 0x13 && global.zone <= 0x15)
+	if (!debug_mode.state)
+	{
+		// Bonus stage check; don't want anything rendering in there now.
+		if (!isBonusStage)
+		{
+			// Is the Hyper Ring active?
+			if (hyper_ring_active)
+			{
+				HUD.drawSprite("hyper_ring_icon", baseX + 0x68, 0x2e , 0xe000)
+			}
+		}
+	}
+
+	// Call the base script, otherwise nothing else will appear.
+	base.RenderHUD()
+}
