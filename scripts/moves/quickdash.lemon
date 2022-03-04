@@ -1,0 +1,125 @@
+/*
+
+	This script file is part of the Sonic 3 A.I.R. Modders Resource. The Modders
+	Resource is a free resource library for any 3 A.I.R. modder, and for any
+	non-commercial purpose. No permission to use needed, no crediting required!
+
+	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+
+*/
+
+// Author Notes
+/*
+
+	This adds a Boost-like dash move assigned to X on an XBOX, D on a keyboard, Y on a Nintendo and Square
+	on a PlayStation.
+	
+	If you only want some characters to use the move, remove their functions for it (including the address-hook.)
+	
+	I hope you use it in mods and enjoy it!
+			-Bandway
+
+*/
+
+constant u64 dashSpeed = 0x500
+global u8 lastHeldDPad.dir
+global u8 dashTimer
+constant u16 dashCooldown = 60 // Edit to change the cooldown length. Stored as frames.
+// Game normally runs at 60 FPS, meaning 60 is one second.
+
+//# address-hook(0x0013e4) end(0x0014e4)
+function void UpdateGamePause()
+{
+	// If left or right are pressed, set lastHeldDPad.dir to 1 for Left and 0 for Right.
+	// This is so the dash goes in the direction you are currently holding the D-pad in,
+	// or the direction your character is going.
+	if (Input.buttonPressed(BUTTON_LEFT))
+		lastHeldDPad.dir = 1
+	if (Input.buttonPressed(BUTTON_RIGHT))
+		lastHeldDPad.dir = 0
+	base.UpdateGamePause()
+}
+
+// Sonic's dash.
+
+//# address-hook(0x010a94) end(0x010ae8)
+function void Character.BaseUpdate.Sonic()
+{
+	base.Character.BaseUpdate.Sonic()
+	if (A0 == 0xffffb000) // This is to check if this is the main player and not 2P.
+	{
+		if (Input.buttonPressed(BUTTON_B) && dashTimer == 0) // If you press X on an Xbox or Square on a PS,
+		{																  // and the timer is 0, then dash.
+			if (lastHeldDPad.dir == 1 && (char.render_flags & render_flag.FLIP_X))
+				char.velocity.x -= dashSpeed // For when facing Left and last pressed direction was Left.
+			else if (lastHeldDPad.dir == 0 && (char.render_flags & render_flag.FLIP_X))
+				char.velocity.x += char.velocity.x - char.velocity.x - dashSpeed // For when facing Left and last pressed direction was Right.
+			else if (lastHeldDPad.dir == 1 && !(char.render_flags & render_flag.FLIP_X))
+				char.velocity.x -= char.velocity.x - char.velocity.x + dashSpeed // For when facing Right and last pressed direction was Left.
+			else
+				char.velocity.x += dashSpeed  // For when facing Right and last pressed direction was Right.
+			char.velocity.y = 0 // Don't jump.
+			dashTimer = dashCooldown // Set timer to dashCooldown.
+			playSound(SFX_INSTASHIELD) // Play SFX.
+			char.state = char.state.ROLLING // Roll.
+		}
+		if (dashTimer > 0)
+			dashTimer -= 1 // If timer is not 0, decrease by 1.
+	}
+}
+
+// Tails' dash.
+
+//# address-hook(0x01365c) end(0x0136b8)
+function void Character.BaseUpdate.Tails()
+{
+	base.Character.BaseUpdate.Tails()
+	if (A0 == 0xffffb000) // This is to check if this is the main player and not 2P.
+	{
+		if (Input.buttonPressed(BUTTON_B) && dashTimer == 0) // If you press X on an Xbox or Square on a PS,
+		{																  // and the timer is 0, then dash.
+			if (lastHeldDPad.dir == 1 && (char.render_flags & render_flag.FLIP_X))
+				char.velocity.x -= dashSpeed // For when facing Left and last pressed direction was Left.
+			else if (lastHeldDPad.dir == 0 && (char.render_flags & render_flag.FLIP_X))
+				char.velocity.x += char.velocity.x - char.velocity.x - dashSpeed // For when facing Left and last pressed direction was Right.
+			else if (lastHeldDPad.dir == 1 && !(char.render_flags & render_flag.FLIP_X))
+				char.velocity.x -= char.velocity.x - char.velocity.x + dashSpeed // For when facing Right and last pressed direction was Left.
+			else
+				char.velocity.x += dashSpeed  // For when facing Right and last pressed direction was Right.
+			char.velocity.y = 0 // Don't jump.
+			dashTimer = dashCooldown // Set timer to dashCooldown.
+			playSound(SFX_INSTASHIELD) // Play SFX.
+			char.state = char.state.ROLLING // Roll.
+		}
+		if (dashTimer > 0)
+			dashTimer -= 1 // If timer is not 0, decrease by 1.
+	}
+}
+
+// Knuckles' dash.
+
+//# address-hook(0x016444) end(0x016498)
+function void Character.BaseUpdate.Knuckles()
+{
+	base.Character.BaseUpdate.Knuckles()
+	if (A0 == 0xffffb000) // This is to check if this is the main player and not 2P.
+	{
+		if (Input.buttonPressed(BUTTON_B) && dashTimer == 0) // If you press X on an Xbox or Square on a PS,
+		{																  // and the timer is 0, then dash.
+			if (lastHeldDPad.dir == 1 && (char.render_flags & render_flag.FLIP_X))
+				char.velocity.x -= dashSpeed // For when facing Left and last pressed direction was Left.
+			else if (lastHeldDPad.dir == 0 && (char.render_flags & render_flag.FLIP_X))
+				char.velocity.x += char.velocity.x - char.velocity.x - dashSpeed // For when facing Left and last pressed direction was Right.
+			else if (lastHeldDPad.dir == 1 && !(char.render_flags & render_flag.FLIP_X))
+				char.velocity.x -= char.velocity.x - char.velocity.x + dashSpeed // For when facing Right and last pressed direction was Left.
+			else
+				char.velocity.x += dashSpeed  // For when facing Right and last pressed direction was Right.
+			char.velocity.y = 0 // Don't jump.
+			dashTimer = dashCooldown // Set timer to dashCooldown.
+			playSound(SFX_INSTASHIELD) // Play SFX.
+			char.state = char.state.ROLLING // Roll.
+		}
+		if (dashTimer > 0)
+			dashTimer -= 1 // If timer is not 0, decrease by 1.
+	}
+}
