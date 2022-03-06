@@ -6,10 +6,12 @@ The Modders' Resource is a free, non-commercial resource created by modders _for
 ### Usage Guidelines
 As stated, the assets are free for open usage with the only exemption being commercial usage.
 
-Commercial usage occurs when the usage of assets are for profit in real world currency or any digital item/currency that can be turned into real world currency. This includes paid-access, paywalled, or commisioned content (for example, as a Patreon reward for paid tiers.)
+Commercial usage occurs when the usage of assets are for profit in real world currency or any digital item/currency that can be turned into real world currency. This includes paid-access, paywalled, or commissioned content (for example, as a Patreon reward for paid tiers.)
 
-An example of non-commercial, commisioned usage would be Gamebanana points from requests. The only thing you could really turn them into is games.
+An example of non-commercial, commissioned usage would be [Gamebanana](https://gamebanana.com/) points from requests. The only thing you could really turn them into are games that are not refundable.
 
 ### More Information
 
 Please see the [wiki](https://github.com/AirWay1/3AIR-Mod-Resources/wiki) for more information on the Modders' Resource, including contributor information and a FAQ that should hopefully answer any questions you may have.
+
+This repository and its content are not licensed under any license but may be used as stated.
