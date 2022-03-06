@@ -1,7 +1,7 @@
-# Index for Scripts/
-## Audio
+## Index for Scripts/
+### Audio
 Scripts that alter audio.
-## Moves
+### Moves
 Scripts that change or alter movement abilities for characters.
-## Rendering
+### Rendering
 Scripts that alter rendering.
