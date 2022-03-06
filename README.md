@@ -1,7 +1,7 @@
 ![Logo](https://cdn.discordapp.com/attachments/883460005393731646/940272318352089129/air_resource_logo_big.png)
 ___
 
-The Modders' Resource is a free, non-commercial resource created by modders _for_ modders. Every asset available in this public repository can be used for any purpose non-commercially, and without the need of crediting or asking for permission.
+The Modders' Resource is a free, public, non-commercial resource library created by modders _for_ modders. Every asset available in this public repository can be used for any purpose non-commercially, and without the need of crediting or asking for permission.
 
 ### Usage Guidelines
 As stated, the assets are free for open usage with the only exemption being commercial usage.
