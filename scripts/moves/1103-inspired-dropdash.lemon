@@ -1,0 +1,119 @@
+/*
+
+	This script file is part of the Sonic 3 A.I.R. Modders Resource. The Modders
+	Resource is a free resource library for any 3 A.I.R. modder, and for any
+	non-commercial purpose. No permission to use needed, no crediting required!
+
+	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+
+*/
+
+// Author Notes
+/*
+
+	This disables the peel-out and edits the drop-dash to function somewhat similarly to the Sonic 3 1103 prototype.
+    Hold Up and Jump in the air in order to drop-dash.
+
+*/
+
+function bool Character.updateSuperPeelout()
+{
+	return false
+}
+
+function void Character.updateJumpMoves()
+{
+	u8 input_state     = (char.character == CHARACTER_TAILS) ? control.tails.state   : control.player1.state
+	u8 input_pressed   = (char.character == CHARACTER_TAILS) ? control.tails.pressed : control.player1.pressed
+	bool isSuperActive = (char.character == CHARACTER_TAILS) ? super.active.tails    : super.active
+
+	if (char.jumping)
+	{
+		// Limit velocity.y
+		s16 max_vy = (char.flags & char.flag.UNDERWATER) ? -0x200 : -0x400
+		if (char.velocity.y < max_vy)
+		{
+			// Limit vertical velocity while not pressing any jump button
+			//  -> This is important to support low jumps by just tapping the button briefly
+			if ((input_state & CONTROL_ABC) == 0)
+			{
+				char.velocity.y = max_vy
+			}
+		}
+		else
+		{
+			if (char.double_jump_state == 0)
+			{
+					if (Input.buttonPressed(BUTTON_Y))
+					{
+						if (!isSuperActive && char.invuln.countdown == 0)	// Check invulnerability to prevent spamming of super activate + cancel
+						{
+							if (Character.performSuperTransformation())
+								return
+						}
+					}
+
+				// Check if pressed jump again in mid-air
+				if (input_pressed & CONTROL_ABC)
+				{
+					// Check for other things to do instead of the usual reaction to jump button pressed
+					if (onCharacterPressedJumpInMidAir(input_state, input_pressed))
+					{
+						if (char.character == CHARACTER_SONIC)
+						{
+							SonicPressedJumpInMidAir()
+						}
+						else if (char.character == CHARACTER_TAILS)
+						{
+							TailsPressedJumpInMidAir()
+						}
+						else if (!competition_mode.active)
+						{
+							KnucklesPressedJumpInMidAir()
+						}
+						else
+						{
+							// Knuckles behaves just like Sonic in competition mode
+							SonicPressedJumpInMidAir()
+						}
+					}
+				}
+			}
+			if (Game.getSetting(SETTING_DROPDASH) && char.character == CHARACTER_SONIC && !competition_mode.active)
+			{
+				// Handle drop dash
+				//  -> Can only be charged if there is no shield active (only exception: drop dash charge started already, when shield gets active -- this reflects Sonic Mania's behavior)
+				//  -> But can be charged if invincible (incl. Super / Hyper Sonic)
+				bool chargeDropDash = (control.player1.state & CONTROL_ABC) && (control.player1.state & CONTROL_UP) && ((char.bonus_effect & 0x70) == 0 || (char.bonus_effect & char.bonus.INVINCIBLE) || sonic.dropdash_counter > 0) && !(char.double_jump_state)
+                // This checks for Up being held.
+				if (chargeDropDash)
+				{
+					if (sonic.dropdash_counter < DROPDASH_FULLCHARGE)
+					{
+						// Drop dash charging
+						++sonic.dropdash_counter
+						if (sonic.dropdash_counter == DROPDASH_FULLCHARGE)
+						{
+							// Fully charged now
+							char.state = char.state.SONIC_DROPDASH
+							Audio.playAudio("dropdash_charge", AudioContext.CONTEXT_SOUND)
+						}
+					}
+				}
+				else if (sonic.dropdash_counter > 0)
+				{
+					// Abort drop dash
+					sonic.dropdash_counter = 0
+					char.state = char.state.ROLLING
+				}
+			}
+		}
+	}
+	else
+	{
+		if (char.spindash == 0)
+		{
+			char.velocity.y = max(char.velocity.y, -0x0fc0)
+		}
+	}
+}
