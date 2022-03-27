@@ -21,7 +21,7 @@ function void Character.BaseUpdate.Sonic()
 {
 	base.Character.BaseUpdate.Sonic()
     // 6 frame walk
-	if (char.animation.sprite < 29 && char.animation.frame == 2 && (char.state == char.state.RUNNING)) // If walking and on frame 2, set frame to 4.
+	if (char.animation.sprite < 29 && char.animation.frame == 2 && char.state == char.state.RUNNING) // If walking and on frame 2, set frame to 4.
 		char.animation.frame = 4 // The first 2 animation frames are skipped.
         
     // 1 frame victory animation
@@ -37,7 +37,7 @@ function void Character.BaseUpdate.Sonic()
 		char.animation.sprite = 164
 		char.animation.frame = 1	
 	}
-	if (char.animation.sprite == 163)
+	else if (char.animation.sprite == 163)
 	{
 		char.animation.sprite = 161
 		char.animation.frame = 1	
