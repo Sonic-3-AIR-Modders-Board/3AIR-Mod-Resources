@@ -54,11 +54,6 @@ function void HyperRing02.update()
 		{
 			objA0.position.y.u16 += D1.u16
 			objA0.velocity.y = (objA0.velocity.y >> 2) - objA0.velocity.y
-			
-			// These also have a chance to reverse direction when bouncing. Originally, this was done to sort of mimic Mania's rings bouncing from walls until I implemented a proper wall check, and it makes these slightly easier to grab.
-			u8 random = System.rand() % 100
-			if (random <= 10)
-				objA0.velocity.x = -objA0.velocity.x
 		}
 		// Wall collision functions, D3 is the object's width here.
 		if (objA0.velocity.x >= 0)
