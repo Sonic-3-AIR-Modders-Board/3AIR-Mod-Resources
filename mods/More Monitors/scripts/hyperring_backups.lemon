@@ -17,7 +17,7 @@ function void fn063c14()
 	base.fn063c14()
 }
 
-// Exiting HPZ? I think?
+// Exiting HPZ I think?
 //# address-hook(0x090c34) end(0x090ca0)
 function void fn090c34()
 {
@@ -61,7 +61,7 @@ function void fn090926()
 	}
 }
 
-// Entering BS from big ring? I think?
+// Entering BS from big ring I think?
 //# address-hook(0x02d1cc) end(0x02d232)
 function void fn02d1cc()
 {

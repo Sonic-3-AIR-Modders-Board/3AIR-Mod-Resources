@@ -7,10 +7,11 @@
 //# address-hook(0x200000) end(0x200001)
 function void HyperRing.update()
 {
-	if objA0.box_size.x != 0xff
+	if (objA0.box_size.x != 0xff)
 	{
 		return
 	}
+
 	// The countdown for these rings works slightly different from the original.
 	// These all have their own countdown timer. This prevents many issues.
 	if (objA0.value32 > 0)
@@ -60,6 +61,7 @@ function void HyperRing02.update()
 			if (random <= 10)
 				objA0.velocity.x = -objA0.velocity.x
 		}
+
 		// Wall collision functions, D3 is the object's width here.
 		if (objA0.velocity.x >= 0)
 		{
@@ -71,6 +73,7 @@ function void HyperRing02.update()
 			D3 = -16
 			fn00fe3c()
 		}
+
 		// Did we collide?
 		if (D1.s16 < 0)
 		{
@@ -108,7 +111,9 @@ function void HyperRing04.update()
 		ItemEffect.ApplyExtraLifePlayer1()
 	}
 	else
+	{
 		playMusic(SFX_RING)
+	}
 	
 	fn01a7d6()
 }
