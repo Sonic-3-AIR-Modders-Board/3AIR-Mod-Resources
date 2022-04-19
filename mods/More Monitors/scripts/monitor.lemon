@@ -48,7 +48,7 @@ function void MonitorIntact.UpdateDefault()
 	
 	// This is here to fix some weirdness with the flickering animations.
 	// The base game does the exact same thing for the classic shield.
-	if ((objA0.state == 0x0e) || (objA0.state == 0x0f))
+	if (objA0.state == 0x0e) || (objA0.state == 0x0f)
 	{
 		objA0.state = 0x03
 	}

@@ -20,8 +20,7 @@
 */
 
 // This global lets you have custom sprites for the hyper rings. If set to false, the rings will simply use the normal ring sprite scaled up.
-define bool custom_rings = false
-
+global bool custom_rings = false
 global bool hyper_ring_active = false
 global bool hyper_ring_active_backup = false
 
@@ -35,7 +34,6 @@ function void initializeMainGame()
 {
 	hyper_ring_active = hyper_ring_active_backup
 	hyper_ring_active_backup = false
-
 	base.initializeMainGame()
 }
 
