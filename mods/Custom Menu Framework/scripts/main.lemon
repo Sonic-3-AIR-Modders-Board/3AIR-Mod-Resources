@@ -78,7 +78,7 @@ function void loadupCustomMenu()
 	CustomMenu.update()
 }
 
-// Modified data select code to remove some stuff but still keep the good ol' rendering.
+// Modified data select code to remove unnecessary stuff but still keep the good ol' rendering.
 function void CustomMenu.setup()
 {
 	VDP.Config.setActiveDisplay(false)
@@ -106,12 +106,12 @@ function void CustomMenu.update()
 	// Main loop
 	while (true)
 	{
-		// Some stuff I don't know about, do not delete.
+		// Basic stuff you'll pretty much always want, do not delete.
 		global.frame_state = 0x1e
 		waitForNextFrame()
 	@EntryPoint:
 
-		// Reset sprites so they go away. Last time I didn't use this it reached the sprite limit.
+		// Reset sprites so they go away and refresh every frame, this needs to be kept as well
 		Renderer.resetSprites()
 
 		// Render background.
@@ -119,10 +119,10 @@ function void CustomMenu.update()
 
 		++level.framecounter
 		// ---------------
-		// Recommended to leave the code above alone unless you have a good reason to do so.
+		// Recommended to leave the above code alone unless you have a good reason to do so.
 		// ---------------
 
-		// To keep code clean, I'm putting all logic in here. Do however you want though!
+		// To keep the code clean, I'm putting all logic in here. Do however you want though!
 		CustomMenu.MainLogicLoop()
 
 		// These two if condtions allow exiting to differnt locations.
@@ -133,7 +133,7 @@ function void CustomMenu.update()
 		{
 			playSound(0xad)
 
-			// Fade out screen.
+			// Fade out the screen.
 			u32 backupA0 = A0
 			FadeOutScreenBlocking()
 			A0 = backupA0
@@ -144,7 +144,7 @@ function void CustomMenu.update()
 
 			menuScreen = 0
 		}
-		// This code exits to the Sonic 3 A.I.R. main menu.
+		// This code exits to the base Sonic 3 A.I.R. main menu.
 		else if (control.pad1.pressed & CONTROL_C)
 		{
 			playSound(0xad)
@@ -166,7 +166,7 @@ function void CustomMenu.MainLogicLoop()
 	if (control.pad1.state & CONTROL_UP)
 		--Sonic.Y	// Instead of doing Sonic.Y = Sonic.Y - 1, you can do --Sonic.Y and have cleaner code.
 	else if (control.pad1.state & CONTROL_DOWN)
-		++Sonic.Y	// Same thing here, just adds onto it instead.
+		++Sonic.Y	// Same thing here, just add onto it instead.
 
 	// Horizontal direction. Basically the same as the last condition checks.
 	if (control.pad1.state & CONTROL_RIGHT)
@@ -178,13 +178,14 @@ function void CustomMenu.MainLogicLoop()
 	Renderer.drawCustomSprite("hud_lives_icon_sonic", Sonic.X, Sonic.Y, 0x80, 0, 0xf000)
 }
 
-// Fun fact. "bg_dataselect does not work for some reason, so I used a new sprite defined as "custom_background".
+// The stock "bg_dataselect" sprite does not work for our purposes, thanks to it being a palettised sprite,
+// so I used a new sprite defined as "custom_background" that uses component colours instead
 function void DataSelect.drawCustomPlanes()
 {
 	// Check for the screen the menu is on.
 	if (menuScreen == 1)
 	{
-		// If you are wondering why I didn't do CustomMenu.drawCustomPlanes() it didn't load quite as fast as I would like it to.
+		// If you are wondering why I didn't do CustomMenu.drawCustomPlanes(), it didn't load quite as fast as I would like it to.
 		
 		// Render the custom background.
 		Renderer.drawCustomSprite("custom_background", getScreenExtend() - 40, 0, 0x00, 0, 0x2000)

@@ -85,7 +85,7 @@ function bool Standalone.drawCharacterSprite(u8 character, u8 variant, s16 px, s
 					if (!Game.getSetting(SETTING_SMOOTH_ROTATION))
 					{
 						angle = (animationSprite - 0x21) / 4 * 0xe0
-						if (char.flags & char.flag.FACING_LEFT)
+						if ((char.flags & char.flag.FACING_LEFT) == (global.inv_gravity == 0))
 							angle = -angle
 						animationSprite = 0x21 + (animationSprite - 0x21) % 4
 					}
@@ -192,6 +192,7 @@ function bool Standalone.drawCharacterSprite(u8 character, u8 variant, s16 px, s
 				key = stringformat("sonic_dropdash_%d", animationSpriteEx - CHAR_ANIMSPRITE_SONIC_DROPDASH)
 			}
 		}
+
 		if (isPlayer1)
 			timeattack.animSpriteEx = animationSpriteEx
 

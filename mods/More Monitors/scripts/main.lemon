@@ -21,6 +21,7 @@
 
 // This global lets you have custom sprites for the hyper rings. If set to false, the rings will simply use the normal ring sprite scaled up.
 global bool custom_rings = false
+
 global bool hyper_ring_active = false
 global bool hyper_ring_active_backup = false
 
@@ -62,10 +63,11 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 			return true
 		}
 	}
+
 	return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
 }
 
-// Shout out to Lave Slime for their HUD tutorial!
+// Shout out to Lave sIime for their HUD tutorial!
 //# address-hook(0x00db44) end(0x00dbb2)
 function void RenderHUD()
 {
@@ -80,10 +82,10 @@ function void RenderHUD()
 	}
 	baseX += 0x0f
 
-	bool isBonusStage = (global.zone >= 0x13 && global.zone <= 0x15)
 	if (!debug_mode.state)
 	{
 		// Bonus stage check; don't want anything rendering in there now.
+		bool isBonusStage = (global.zone >= 0x13 && global.zone <= 0x15)
 		if (!isBonusStage)
 		{
 			// Is the Hyper Ring active?
@@ -94,6 +96,6 @@ function void RenderHUD()
 		}
 	}
 
-	// Call the base script, otherwise nothing else will appear.
+	// Call the base HUD script, otherwise nothing else will appear.
 	base.RenderHUD()
 }
