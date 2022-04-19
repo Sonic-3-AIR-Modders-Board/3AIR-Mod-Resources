@@ -51,7 +51,6 @@ function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
 		
 			if (custom_rings)
 			{
-				u8 anim = objA0.animation.sprite % 4
 				u64 key = stringformat("big_hyper_ring_0%d", objA0.animation.sprite)
 				Renderer.drawCustomSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue, 0, alpha)
 			}
@@ -92,7 +91,7 @@ function void RenderHUD()
 			// Is the Hyper Ring active?
 			if (hyper_ring_active)
 			{
-				HUD.drawSprite("monitor_icon_hyper_ring", baseX + 0x6b, 0x2e , 0xe000)
+				HUD.drawSprite("hyper_ring_icon", baseX + 0x68, 0x2e , 0xe000)
 			}
 		}
 	}
