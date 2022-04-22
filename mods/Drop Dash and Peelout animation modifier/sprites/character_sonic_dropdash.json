@@ -1,0 +1,10 @@
+{
+	"sonic_dropdash_0":  { "File": "character_sonic_dropdash.bmp", "Rect": "10,15,30,30", "Center": "16,16" },
+	"sonic_dropdash_1":  { "File": "character_sonic_dropdash.bmp", "Rect": "59,15,30,30", "Center": "16,16" },
+	"sonic_dropdash_2":  { "File": "character_sonic_dropdash.bmp", "Rect": "108,15,30,30", "Center": "16,16" },
+	"sonic_dropdash_3":  { "File": "character_sonic_dropdash.bmp", "Rect": "157,15,30,30", "Center": "16,16" },
+	"sonic_dropdash_4":  { "File": "character_sonic_dropdash.bmp", "Rect": "206,15,30,30", "Center": "16,16" },
+	"sonic_dropdash_5":  { "File": "character_sonic_dropdash.bmp", "Rect": "255,15,30,30", "Center": "16,16" },
+	"sonic_dropdash_6":  { "File": "character_sonic_dropdash.bmp", "Rect": "108,15,30,30", "Center": "16,16" },
+	"sonic_dropdash_7":  { "File": "character_sonic_dropdash.bmp", "Rect": "353,15,30,30", "Center": "16,16" }
+}
