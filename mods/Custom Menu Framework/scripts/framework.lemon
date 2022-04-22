@@ -1,0 +1,79 @@
+// Script file contains some of the backend stuff you will most likely not be editing.
+
+// Load up our own custom menu instead of the Data Select by overwriting this script with our own code.
+function void EntryFunctions.dataSelect()
+{
+	yieldExecution()
+
+	EntryFunctions.sharedInit()
+	System.setupCallFrame("GameModeControlLoop", "@EntryPoint")
+	
+	// Loadup the custom menu. Usually "loadupDataSelect".
+	System.setupCallFrame("loadupCustomMenu")
+}
+
+// Setup custom menu.
+function void loadupCustomMenu()
+{	
+	// Go to our custom menu.
+	global.game_mode = 0x8c
+	customMenu.setup()
+	Menu.FadeInAfterInit()
+
+	customMenu.update()
+}
+
+// Modified data select code to remove unnecessary stuff but still keep the good ol' rendering.
+function void customMenu.setup()
+{
+	VDP.Config.setActiveDisplay(false)
+	fn0011ca()
+
+	VDP.Config.setActiveDisplay(true)
+	zeroMemory(0xffffac00, 0x400)
+	zeroMemory(0xffffb000, 0x2000)
+
+	VDP.Config.enableHInt(false)
+	VDP.Config.setNameTableBasePlaneA(0xe000)
+	VDP.Config.setNameTableBasePlaneB(0xc000)
+	VDP.Config.setNameTableBasePlaneW(0xe000)
+
+	VDP.Config.setVerticalScrolling(false, 0)	// Horizontal scrolling mode without scroll mask
+	VDP.Config.setRenderingModeConfiguration(false)
+	VDP.Config.setPlayfieldSizeInPixels(1024, 256)
+
+	level.framecounter = 0
+}
+
+// Where most of the magic happens. Dreams do indeed come true!
+function void customMenu.update()
+{	
+	// Because setting up a new frame_state causes fading in to break, we have to setup our own fade in.
+	FadeOutScreenBlocking()
+
+	// Main loop
+	while (true)
+	{
+		FadeInFromWhite()
+
+		// Basic stuff you'll pretty much always want, do not delete.
+		waitForNextFrame()
+	@EntryPoint:
+
+		// Reset sprites so they go away and refresh every frame, this needs to be kept as well
+		Renderer.resetSprites()
+
+		// Render background.
+		DataSelect.drawCustomPlanes()
+
+		++level.framecounter
+		// ---------------
+		// Recommended to leave the above code alone unless you have a good reason to do so.
+		// ---------------
+
+		// To keep the code clean, I'm putting all logic in here. Do however you want though!
+		customMenu.mainLogicLoop()
+		
+		customMenu.discordRPC()
+	}
+}
