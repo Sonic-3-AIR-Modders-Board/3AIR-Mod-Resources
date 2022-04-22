@@ -1,0 +1,10 @@
+{
+	"S3_DROPDASH_0":  { "File": "S3 DROPDASH.bmp", "Rect": "10,15,30,30", "Center": "16,16" },
+	"S3_DROPDASH_1":  { "File": "S3 DROPDASH.bmp", "Rect": "59,15,30,30", "Center": "16,16" },
+	"S3_DROPDASH_2":  { "File": "S3 DROPDASH.bmp", "Rect": "108,15,30,30", "Center": "16,16" },
+	"S3_DROPDASH_3":  { "File": "S3 DROPDASH.bmp", "Rect": "157,15,30,30", "Center": "16,16" },
+	"S3_DROPDASH_4":  { "File": "S3 DROPDASH.bmp", "Rect": "206,15,30,30", "Center": "16,16" },
+	"S3_DROPDASH_5":  { "File": "S3 DROPDASH.bmp", "Rect": "255,15,30,30", "Center": "16,16" },
+	"S3_DROPDASH_6":  { "File": "S3 DROPDASH.bmp", "Rect": "108,15,30,30", "Center": "16,16" },
+	"S3_DROPDASH_7":  { "File": "S3 DROPDASH.bmp", "Rect": "353,15,30,30", "Center": "16,16" }
+}
