@@ -1,5 +1,5 @@
 # Index
-The index is used for keeping track of files for crediting reasons and for quick descriptions about said files.
+The index is used for keeping track of files for crediting reasons and contains quick descriptions about said files.
 ____
 # mods/
 ## Custom Menu Framework/
