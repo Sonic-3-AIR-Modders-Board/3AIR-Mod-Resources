@@ -11,28 +11,28 @@
 // Author Notes
 /*
 
-    This changes some of Sonic's animations to their Sonic 1 versions (for example, 6 frame walk and 2 frame ledge teeter).
-    This is designed for use in skin mods.
-    
+	This changes some of Sonic's animations to their Sonic 1 versions (for example, 6 frame walk and 2 frame ledge teeter).
+	This is designed for use in skin mods.
+	
 */
 
 //# address-hook(0x010a94) end(0x010ae8)
 function void Character.BaseUpdate.Sonic()
 {
 	base.Character.BaseUpdate.Sonic()
-    // 6 frame walk
+	// 6 frame walk
 	if (char.animation.sprite < 29 && char.animation.frame == 2 && char.state == char.state.RUNNING) // If walking and on frame 2, set frame to 4.
 		char.animation.frame = 4 // The first 2 animation frames are skipped.
-        
-    // 1 frame victory animation
-    if (char.animation.sprite == 178 || char.animation.sprite == 179)
+		
+	// 1 frame victory animation
+	if (char.animation.sprite == 178 || char.animation.sprite == 179)
 	{
 		char.animation.sprite = 177
 		char.animation.frame = 8
 	}
-    
-    // 2 frame ledge teeters
-    if (char.animation.sprite == 166)
+	
+	// 2 frame ledge teeters
+	if (char.animation.sprite == 166)
 	{
 		char.animation.sprite = 164
 		char.animation.frame = 1	
@@ -42,9 +42,9 @@ function void Character.BaseUpdate.Sonic()
 		char.animation.sprite = 161
 		char.animation.frame = 1	
 	}
-    
-    // Infinite 2 frame waiting animation
-    if (char.animation.sprite == 0xad || char.animation.sprite == 0xd9 || char.animation.sprite == 0xaf || char.animation.sprite == 0xae)
+	
+	// Infinite 2 frame waiting animation
+	if (char.animation.sprite == 0xad || char.animation.sprite == 0xd9 || char.animation.sprite == 0xaf || char.animation.sprite == 0xae)
 	{
 		char.animation.sprite = 0xbe
 		char.animation.frame -= 5
