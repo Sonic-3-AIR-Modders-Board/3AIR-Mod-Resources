@@ -12,7 +12,7 @@
 /*
 
 	This disables the peel-out and edits the drop-dash to function somewhat similarly to the Sonic 3 1103 prototype.
-    Hold Up and Jump in the air in order to drop-dash.
+	Hold Up and Jump in the air in order to drop-dash.
 
 */
 
@@ -23,9 +23,9 @@ function bool Character.updateSuperPeelout()
 
 function void Character.updateJumpMoves()
 {
-	u8 input_state     = (char.character == CHARACTER_TAILS) ? control.tails.state   : control.player1.state
+	u8 input_state	 = (char.character == CHARACTER_TAILS) ? control.tails.state   : control.player1.state
 	u8 input_pressed   = (char.character == CHARACTER_TAILS) ? control.tails.pressed : control.player1.pressed
-	bool isSuperActive = (char.character == CHARACTER_TAILS) ? super.active.tails    : super.active
+	bool isSuperActive = (char.character == CHARACTER_TAILS) ? super.active.tails	: super.active
 
 	if (char.jumping)
 	{
@@ -85,7 +85,7 @@ function void Character.updateJumpMoves()
 				//  -> Can only be charged if there is no shield active (only exception: drop dash charge started already, when shield gets active -- this reflects Sonic Mania's behavior)
 				//  -> But can be charged if invincible (incl. Super / Hyper Sonic)
 				bool chargeDropDash = (control.player1.state & CONTROL_ABC) && (control.player1.state & CONTROL_UP) && ((char.bonus_effect & 0x70) == 0 || (char.bonus_effect & char.bonus.INVINCIBLE) || sonic.dropdash_counter > 0) && !(char.double_jump_state)
-                // This checks for Up being held.
+				// This checks for Up being held.
 				if (chargeDropDash)
 				{
 					if (sonic.dropdash_counter < DROPDASH_FULLCHARGE)
