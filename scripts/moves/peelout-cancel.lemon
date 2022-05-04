@@ -1,0 +1,77 @@
+/*
+
+	This script file is part of the Sonic 3 A.I.R. Modders Resource. The Modders
+	Resource is a free resource library for any 3 A.I.R. modder, and for any
+	non-commercial purpose. No permission to use needed, no crediting required!
+
+	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+
+*/
+
+// Author Notes
+/*
+
+	This prevents using the peel-out with B. When pressing B while charging up, the peel-out will be cancelled.
+
+*/
+
+function bool Character.updateSuperPeelout()
+{
+	u8 input_state   = control.player1.state
+	u8 input_pressed = control.player1.pressed
+
+	if (char.spindash == 0)
+	{
+		bool canStartPeelout = (char.state == char.state.LOOKING_UP) && (input_pressed & CONTROL_A || input_pressed & CONTROL_C) && (player1.control_override == 0)	// Last check is needed in cutscenes (e.g. end of MHZ 2)
+		// (input_pressed & CONTROL_ABC) is changed to (input_pressed & CONTROL_A || input_pressed & CONTROL_C) to prevent B from being used for peel-out.
+		if (!canStartPeelout)
+		{
+			// Nothing to see here
+			return false
+		}
+
+		char.state = char.state.RUNNING
+		char.spindash = 0x80
+		char.spindash_charge = 0
+		Audio.playAudio("peelout_charge", AudioContext.CONTEXT_SOUND)
+	}
+	else if (input_state & CONTROL_B && char.spindash == 0x80 && input_state & CONTROL_UP)
+	{
+		// If B is pressed while charging peelout, reset back to normal and return false.
+		char.state = char.state.STANDING
+		char.spindash = 0
+		char.spindash_charge = 0
+		char.groundspeed = 0
+		return false
+	}
+	else if (char.spindash == 0x80)
+	{
+		if (input_state & CONTROL_UP && !(nput_state & CONTROL_B))
+		{
+			// Charge up
+			char.spindash_charge = clamp(char.spindash_charge + 0x20, 0x100, 0x800)
+			if (char.flags & char.flag.UNDERWATER)
+			{
+				char.groundspeed = 0x100 + ((super.active) ? (char.spindash_charge) : (char.spindash_charge * 3/4))
+			}
+			else
+			{
+				char.groundspeed = 0x200 + ((super.active) ? (char.spindash_charge * 3/2) : (char.spindash_charge))
+			}
+			char.flags &= ~char.flag.PUSHING
+			if (abs(char.groundspeed) >= 0x0a00)
+				sonic.fastrunanim.timer = 30
+		}
+		else
+			releaseSuperPeelout()
+
+		// Center camera y-offset again
+		centerCameraYOffset()
+	}
+
+	Character.CheckAgainstMoveBorders()
+	Character.UpdateRotationOnGround()
+	partialUpdateCharacterOnGround()
+
+	return true
+}
