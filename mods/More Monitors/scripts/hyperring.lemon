@@ -48,44 +48,63 @@ function void HyperRing02.update()
 	
 	
 	objA0.velocity.y += 0x18
-	if (objA0.velocity.y >= 0)
-	{
-		fn00f994()
-		if (D1.s16 < 0)
-		{
-			objA0.position.y.u16 += D1.u16
-			objA0.velocity.y = (objA0.velocity.y >> 2) - objA0.velocity.y
-		}
-
-		// Wall collision functions, D3 is the object's width here.
-		if (objA0.velocity.x >= 0)
-		{
-			D3 = 16
-			fn00fac4()
-		}
-		else
-		{
-			D3 = -16
-			fn00fe3c()
-		}
-
-		// Did we collide?
-		if (D1.s16 < 0)
-		{
-			objA0.velocity.x = -objA0.velocity.x	// Then, reverse the x-speed
-		}
+	
+	HyperRing.CheckCollision()
 		
-		if (objA0.value32 == 0)
-		{
-			// Time over for this ring
-			UnloadObject()
-			return
-		}
+	if (objA0.value32 == 0)
+	{
+		// Time over for this ring
+		UnloadObject()
+		return
 	}
 
 	AddAsDynamicObject()
 	objA0.position.x.u16 -= u16[0xffffeebc]
 	DrawObject()
+}
+
+function void HyperRing.CheckCollision()
+{
+	// Wall collision functions, D3 is the object's width here.
+	if (objA0.velocity.x >= 0)
+	{
+		D3 = 8
+		fn00fac4()
+	}
+	else
+	{
+		D3 = -8
+		fn00fe3c()
+	}
+	// Did we collide?
+	if (D1.s16 < 0)
+	{
+		objA0.velocity.x = -objA0.velocity.x	// Then, reverse the x-speed
+	}
+	
+	// Ground collision
+	fn00f994()
+	if (D1.s16 < 0 && objA0.velocity.y >= 0)
+	{
+		objA0.position.y.u16 += D1.u16
+		objA0.velocity.y = (objA0.velocity.y >> 2) - objA0.velocity.y
+	}
+	// Ceiling collision
+	fn00fc12()
+	if (D1.s16 < 0 && objA0.velocity.y < 0)
+	{
+		objA0.position.y.u16 -= D1.s16
+		objA0.velocity.y = 0x50
+	}
+	
+	// FBZ2 Rising platform collision check
+	if (global.zone_act == 0x0401 && objA0.velocity.y >= 0)
+	{
+		if (FBZplatformpos < objA0.position.y.u16 + 0x18 && FBZplatformpos != 0)
+		{
+			objA0.velocity.y = (objA0.velocity.y >> 2) - objA0.velocity.y
+		}
+	}
 }
 
 function void HyperRing04.update()
@@ -225,4 +244,107 @@ function void SpillRings()
 		// Send out regular rings if the Hyper Ring ability isn't active.
 		base.SpillRings()
 	}
+}
+
+// Code from improved ring physics.
+// Keep track of where the platform is. It's an object!
+
+global u16 FBZplatformpos
+
+//# address-hook(0x0533b8) end(0x0533c8)
+function void fn0533b8()
+{
+	objA0.position.x.u16 = D0.u16
+	objA0.position.y.u16 = D1.u16
+
+	D1.u16 = 0x04c0
+	D2 = 0x11
+	D3 = 0x11
+	PlatformCheckClimbOn()
+	
+	FBZplatformpos = objA0.position.y.u16
+}
+
+// And then reset its position upon level load.
+
+function void initializeMainGame()
+{
+	FBZplatformpos = 0
+	base.initializeMainGame()
+}
+
+
+// HUD code
+// Shout out to Lave Slime for their HUD tutorial!
+//# address-hook(0x00db44) end(0x00dbb2)
+function void RenderHUD()
+{
+	if (DEBUG_DISABLE_HUD)
+		return
+
+	s16 baseX = global.level_started
+	if (baseX < 0)
+	{
+		baseX += 8
+		global.level_started = baseX
+	}
+	baseX += 0x0f
+
+	bool isBonusStage = (global.zone >= 0x13 && global.zone <= 0x15)
+	if (!debug_mode.state)
+	{
+		if (!isBonusStage)
+		{
+			if (hyper_ring_active)
+			{
+				// Rings
+				{	
+					u16 py = 0x2e
+					u16 px = baseX + (Game.getSetting(SETTING_EXTENDED_HUD) ? 0x58 : 0x40) + 16
+					if (Game.getSetting(SETTING_EXTENDED_HUD))
+					{
+						px -= 24
+						if (ring_counter > 9)
+							px -= 8
+						if (ring_counter > 99)
+							px -= 8
+					}
+					HUD.drawSprite("hyper_ring_icon", px, py , 0xe000)
+				}
+			}
+		}
+	}
+
+	base.RenderHUD()
+}
+
+function void HUD.drawDigit(u8 digit, u16 px, u16 py, u16 renderQueue)
+{
+	if (renderQueue == 0xe005 && hyper_ring_active)
+	{
+		Renderer.drawCustomSprite(stringformat("blue_hud_digit_%d", digit), px, py, 0, SPRITE_FLAG_PRIO, renderQueue)
+		return
+	}
+	base.HUD.drawDigit(digit, px, py, renderQueue)
+}
+
+
+// Rendering code
+function bool HyperRing.Render(s16 px, s16 py, u16 renderQueue)
+{
+	if (objA0.update_address == 0x200000)
+	{
+		if (objA0.base_state == 0x02)
+		{
+			u8 alpha = min(255, u16(objA0.value32) * 10)	// value32 is the ring's countdown timer
+			// Tint parameter: first byte is the opacity, we just use the alpha here. The rest is the ring's colour, just use the default values there.
+			u32 tint = (alpha << 0x18) + 0xffffff
+
+			u64 key = stringformat("big_hyper_ring_0%d", objA0.animation.sprite)
+			Renderer.drawCustomSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue, 0, alpha)
+
+			return true
+		}
+	}
+	return false
 }
