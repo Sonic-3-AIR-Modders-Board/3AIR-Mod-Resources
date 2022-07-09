@@ -7,7 +7,7 @@ This is a short list of terms that will be referred in this Wiki page. Term name
 
 **Modders** are described commonly as a group of people who create mods and participate in modding.
 
-**The Modders' Resource** will be described as the GitHub repository <https://github.com/AirWay1/3AIR-Mod-Resources> (this is the repository you are browsing right now.) It is currently owned and maintained by AirWay1.
+**The Modders' Resource** will be described as the GitHub repository <https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources> (this is the repository you are browsing right now.) It is currently maintained by the Modder's Board, a collective head of Sonic 3 A.I.R. modding.
 
 An **asset** will be described as a file that have value in the modding of Sonic 3 A.I.R., such as scripts, sprites, audio, mods, etc..
 
@@ -140,7 +140,7 @@ Here's a example of a proper disclaimer and author note segment made for a scrip
 	Resource is a free resource library for any 3 A.I.R. modder, and for any
 	non-commercial purpose. No permission to use needed, no crediting required!
 
-	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+	Come check it out at https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources!
 
 */
 
@@ -322,6 +322,6 @@ If your asset was rejected, this was probably due to the Contributor Guidelines 
 Recommendations will be provided and you are encouraged to try again. If you think we made a mistake, do let us know!
 
 # Conclusion
-If you have any further questions or concerns, especially over your rights to assets, please feel free to submit a issue with the [Question Request template](https://github.com/AirWay1/3AIR-Mod-Resources/issues/new?assignees=&labels=question&template=question-request.md&title=%5BQUESTION%5D).
+If you have any further questions or concerns, especially over your rights to assets, please feel free to submit a issue with the [Question Request template](https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources/issues/new?assignees=&labels=question&template=question-request.md&title=%5BQUESTION%5D).
 
 > We would like to thank you for contributing to the Modders' Resource. This has been a great project and every contribution helps to meeting our goals and beyond! We hope to see you again soon!
