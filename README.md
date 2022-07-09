@@ -6,6 +6,8 @@ ___
 
 The Modders' Resource is a free, public, non-commercial resource library created _by_ modders _for_ modders. Every asset available in this public repository can be used for any purpose non-commercially, without the need of crediting or asking for permission.
 
+**Looking to contribute? [Read our Contributor Guidlines](https://github.com/AirWay1/3AIR-Mod-Resources/blob/main/docs/CONTRIBUTING.md)!**
+
 ### Usage Guidelines
 
 As stated, the assets are free to use for public open usage. The only exemptions would be commercial usage and direct reuploads.
@@ -24,6 +26,6 @@ If you are looking to share our assets with others for any reason, we recommend 
 
 ### More Information
 
-Please see the [wiki](https://github.com/AirWay1/3AIR-Mod-Resources/wiki) for more information on the Modders' Resource, including contributor information and a FAQ that should hopefully answer any questions you may have.
+Please see the [wiki](https://github.com/AirWay1/3AIR-Mod-Resources/wiki) for more information on the Modders' Resource.
 
 This repository and its content are not licensed under any license but may be used as stated.
