@@ -1,6 +1,6 @@
 ---
 name: Asset Removal Request
-about: Removal of Assets from the repository
+about: Want assets removed? Use this template!
 title: "[REMOVAL REQUEST]"
 labels: removal request
 assignees: ''
@@ -13,3 +13,4 @@ assignees: ''
 
 ### Reason
 <!-- If possible, provide a reason. This is required if the asset being removed is not owned by you.. -->
+
