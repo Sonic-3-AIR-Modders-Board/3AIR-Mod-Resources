@@ -22,7 +22,7 @@ _______________
 
 An example of direct reuploads would be using a script file from the Modders' Resource within a mod without any other additional assets (such as other script, sprites, audio, etc.) and the script itself remains unchanged.
 
-If you are looking to share our assets with others for any reason, we recommend sending them over to the Modders' Resource using the repository link, https://github.com/AirWay1/3AIR-Mod-Resources.
+If you are looking to share our assets with others for any reason, we recommend sending them over to the Modders' Resource using the repository link, https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources.
 
 ### More Information
 
