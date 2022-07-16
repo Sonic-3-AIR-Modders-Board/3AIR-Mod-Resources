@@ -1,0 +1,38 @@
+/*
+
+	This script file is part of the Sonic 3 A.I.R. Modders Resource. The Modders
+	Resource is a free resource library for any 3 A.I.R. modder, and for any
+	non-commercial purpose. No permission to use needed, no crediting required!
+
+	Come check it out at https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources!
+
+*/
+
+// Author Notes
+/*
+
+	This is where you can explain the script file and how
+	things work. Keep explanations simple, no need to
+	explain the history of the universe.
+
+	Keep everything nice and clean here. Remember to press
+	enter to make new lines and not have everything go off
+	to the right of the screen.
+
+	Additionally comment on your code too. Every single part
+	of your script file should not be explained here but
+	rather in the code itself via comments.
+
+	Keep comments clean and in format. Always use proper
+	punctuation and put a space between the //
+	and the comment itself.
+
+	// Like this.
+
+	And to clean up code, use camel casing and optimize your
+	code as much as you can. If you need help, do not be afraid
+	to ask for it.
+
+	Happy contributing!
+
+*/
