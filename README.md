@@ -6,7 +6,7 @@ ___
 
 The Modders' Resource is a free, public, non-commercial resource library created _by_ modders _for_ modders. Every asset available in this public repository can be used for any purpose non-commercially, without the need of crediting or asking for permission.
 
-**Looking to contribute? [Read our Contributor Guidelines](https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources/blob/main/docs/CONTRIBUTING.md)!**
+**Looking to contribute? [Read our Contributor Guidelines](https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources/blob/main/CONTRIBUTING.md)!**
 
 ### Usage Guidelines
 
