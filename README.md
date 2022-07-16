@@ -24,6 +24,16 @@ An example of direct reuploads would be using a script file from the Modders' Re
 
 If you are looking to share our assets with others for any reason, we recommend sending them over to the Modders' Resource using the repository link, https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources.
 
+### Index
+
+> [Documentation](https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources/tree/main/documentation/) - Articles that contain documentation about various aspects of moddind.
+>
+> [Mods](https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources/tree/main/mods) - Mods to base your own creations off of; such as making new monitors.
+>
+> [Scripts](https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources/tree/main/scripts) - Pre-made scripts ready for actioon. Whether that would be forcing smoooth rotation, or adding new abilitys.
+>
+> [Sprites](https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources/tree/main/sprites/hud) - Brand new sprites fully hand-crafted for your usage in mods.
+
 ### More Information
 
 Please see the [wiki](https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources/wiki) for more information on the Modders' Resource.
