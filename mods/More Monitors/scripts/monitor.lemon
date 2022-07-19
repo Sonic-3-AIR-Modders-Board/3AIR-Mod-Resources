@@ -154,8 +154,8 @@ function void applyHyperRing()
 // Use this if you need a lot more monitor subtypes.
 function u8 Monitor.getRandomizedType(u8 type, bool hiddenMonitor)
 {
-    if (type >= 0x20)
-        return type
+	if (type >= 0x20)
+		return type
 
-    return base.Monitor.getRandomizedType(type, hiddenMonitor)
+	return base.Monitor.getRandomizedType(type, hiddenMonitor)
 }
