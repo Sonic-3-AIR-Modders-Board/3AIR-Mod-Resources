@@ -1,19 +1,13 @@
 // This is mostly just original spilled ring code, but I made it a completely seperate object for the sake of making this more organized.
 
-
 // value26 is used here for the ring's worth
 // value32 is used here for the countdown (and the fade effect)
 
 //# address-hook(0x200000) end(0x200001)
 function void HyperRing.update()
 {
-	if (objA0.box_size.x != 0xff)
-	{
-		return
-	}
-
 	// The countdown for these rings works slightly different from the original.
-	// These all have their own countdown timer. This prevents many issues.
+	// These all have their own countdown timer. This prevents quite a few issues relating to despawning and fading.
 	if (objA0.value32 > 0)
 		objA0.value32 -= 1
 
@@ -254,19 +248,11 @@ global u16 FBZplatformpos
 //# address-hook(0x0533b8) end(0x0533c8)
 function void fn0533b8()
 {
-	objA0.position.x.u16 = D0.u16
-	objA0.position.y.u16 = D1.u16
-
-	D1.u16 = 0x04c0
-	D2 = 0x11
-	D3 = 0x11
-	PlatformCheckClimbOn()
-	
+	base.fn0533b8
 	FBZplatformpos = objA0.position.y.u16
 }
 
 // And then reset its position upon level load.
-
 function void initializeMainGame()
 {
 	FBZplatformpos = 0
@@ -275,7 +261,7 @@ function void initializeMainGame()
 
 
 // HUD code
-// Shout out to Lave Slime for their HUD tutorial!
+// Shout out to Lave sIime for their HUD tutorial!
 //# address-hook(0x00db44) end(0x00dbb2)
 function void RenderHUD()
 {
@@ -318,6 +304,7 @@ function void RenderHUD()
 	base.RenderHUD()
 }
 
+// This code turns HUD digits used by the rings (renderQueue indicated this) blue.
 function void HUD.drawDigit(u8 digit, u16 px, u16 py, u16 renderQueue)
 {
 	if (renderQueue == 0xe005 && hyper_ring_active)

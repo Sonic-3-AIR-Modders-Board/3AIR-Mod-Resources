@@ -114,7 +114,6 @@ function void applyRandomRings()
 {
 	++u16[A2]
 
-	// We define this variable with a number beforehand so we do not need to call a else statement.
 	u8 amount = 50
 
 	u8 random = System.rand() % 100
@@ -147,4 +146,16 @@ function void applyHyperRing()
 {
 	hyper_ring_active = true
 	Audio.playAudio("hyper_ring", AudioContext.CONTEXT_SOUND)
+}
+
+// Small patch allowing monitor subtypes above 0x20 to be used without issues.
+// 3AIR uses the fifth bit (0x10) for elemental monitors that should be classic with a certain setting, but this is only needed for 0x10 to 0x20.
+// Thus, to free up a bunch of monitor slots, this code is here, right before the game would normally turn these monitors into classic ones.
+// Use this if you need a lot more monitor subtypes.
+function u8 Monitor.getRandomizedType(u8 type, bool hiddenMonitor)
+{
+    if (type >= 0x20)
+        return type
+
+    return base.Monitor.getRandomizedType(type, hiddenMonitor)
 }
