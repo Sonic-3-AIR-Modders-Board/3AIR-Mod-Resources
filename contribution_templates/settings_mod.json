@@ -1,0 +1,27 @@
+{
+	"Metadata":
+	{
+		"Name": "Mod Name",
+		"Author": "Author Name",
+		"Description": "Created for the Sonic 3 A.I.R. Modders Resource, a free resource library filled with assets that are available for any purpose non-commericially.",
+		"URL": "https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources"
+	},
+	"Settings":
+	{
+		"Category Name":
+		[
+			{
+				"InternalName": "Setting.internalName",
+				"DisplayName": "Setting Name",
+				"Category": "",
+				"Variable": "enterVariableNameHere",
+				"DefaultValue": "0",
+				"Options":
+				{
+					"0": "Option 1",
+					"1": "Option 2"
+				}
+			}
+		]
+	}
+}

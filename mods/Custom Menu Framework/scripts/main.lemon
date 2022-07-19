@@ -4,7 +4,7 @@
 	Resource is a free resource library for any 3 A.I.R. modder, and for any
 	non-commercial purpose. No permission to use needed, no crediting required!
 
-	Come check it out at https://github.com/AirWay1/3AIR-Mod-Resources!
+	Come check it out at https://github.com/Sonic-3-AIR-Modders-Board/3AIR-Mod-Resources!
 
 */
 
@@ -45,9 +45,6 @@
 
 */
 
-// Keeps track of menus. Set to 0 when it boots up the Data Select.
-global u8 menuScreen = 0
-
 // Some variables are defined for this script.
 global s16 Sonic.X = 1
 global s16 Sonic.Y = 1
@@ -87,8 +84,6 @@ function void customMenu.mainLogicLoop()
 		// You can setup Call Frames at any point. This is to go into the Data Select.
 		System.setupCallFrame("GameModeControlLoop", "@EntryPoint")
 		System.setupCallFrame("loadupDataSelect")
-
-		menuScreen = 0
 	}
 	// This code exits to the base Sonic 3 A.I.R. main menu.
 	else if (control.pad1.pressed & CONTROL_C)

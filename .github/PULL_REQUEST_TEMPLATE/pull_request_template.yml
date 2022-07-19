@@ -1,0 +1,19 @@
+name: Pull Request Template
+description: Submit your PR.
+title: "[PULL REQUEST]"
+labels: ["contribution"]
+body:
+- type: textarea
+  attributes:
+    label: PR Content
+    description: What contnet is included in this PR?
+    placeholder: My pull request contains...
+  validations:
+    required: true
+- type: checkboxes
+  attributes:
+    label: Do you achknowledge all rights given to you in the Contribution Guidelines?
+    options:
+      - label: Yes.
+  validations:
+    required: true
